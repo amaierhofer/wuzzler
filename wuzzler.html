@@ -3,18 +3,24 @@
 </head>
 
 <body>
-  {{> hello}}
   {{> table}}
+  {{> players}}
 </body>
 
-<template name="table">
-<div class="table free">
-  table
-</div>
+<template name="players">
+
 </template>
 
-<template name="hello">
-  <h1>Hello World!</h1>
-  {{greeting}}
-  <input id="input" type="button" value="Click" />
+<template name="table">
+  <h1>Hallo</h1>
+  <p>
+    Der Kasten is grad "{{status}}"
+
+    {{#if is_free}}
+    <input type="button" value="Reservieren"></input>
+    {{else}}
+    <input type="button" value="Freigeben"></input>
+    {{/if}}
+  </p>
+  <div class="kasten {{status}}"></div>
 </template>
