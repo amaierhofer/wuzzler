@@ -15,6 +15,6 @@ if Meteor.isClient
 
 if Meteor.isServer
   Meteor.startup ->
-    if Table.find.count() is 0
+    if Table.find().count() is 0
       Table.insert(busy: false)
 
