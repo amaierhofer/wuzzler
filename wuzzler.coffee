@@ -1,7 +1,7 @@
 Table = new Meteor.Collection("table")
 
 table = ->
-  Table.findOne() || { busy: false }
+  Session.get('table') && Table.find(Session.get('table')).fetch()[0]
 
 class Counter
   constructor: ->
@@ -11,11 +11,11 @@ class Counter
   start: ->
     @id = Meteor.setInterval(@update, 1000)
     console.log('started: ', @id)
-    Table.update(table()._id, busy: true)
+    Session.set('counter', @value())
 
    update: =>
      console.log('updating: ', @value())
-     Table.update(table()._id, until: @value())
+     Session.set('counter', @value())
 
      @stop() if (@end - @time() < 0)
 
@@ -23,33 +23,35 @@ class Counter
      Math.round((@end - @time()) / 1000)
 
    stop: ->
+     Table.update(table()._id, busy: false)
+     Session.set('counter', null)
      console.log('clearing interval: ', @id)
      Meteor.clearInterval(@id)
-     Table.update(table()._id, busy: false, until: null)
-
 
    time: ->
      parseInt(new Date().getTime(),10)
 
 if Meteor.isClient
-
-  new Counter()
-
-  counter_view =
-    value: -> table().until
+  Session.set('counter', null)
+  Table.find().observe
+    added: (obj, idx) -> Session.set('table', obj._id)
 
   table_view =
-    status: -> if table().busy then "besetzt" else "frei"
-    countdown: -> 'asdf'
+    status: -> if !Template.table.is_free() then "besetzt" else "frei"
+    is_free: -> table() && !table().busy
 
-    is_free: -> !table().busy
+    countdown: -> Session.get('counter') || ""
+
     events:
-      'click input': ->
-        console.log table()
+      'click input': =>
+        if !table().busy
+          @counter = new Counter()
+        else
+          @counter && @counter.stop()
+
         Table.update(table()._id, busy: !table().busy)
 
   $.extend(Template.table, table_view)
-  $.extend(Template.counter, counter_view)
 
 if Meteor.isServer
   Meteor.startup ->
