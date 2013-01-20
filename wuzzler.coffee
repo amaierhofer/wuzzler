@@ -1,8 +1,13 @@
 Table = new Meteor.Collection("table")
-
 table = -> Table.findOne()
 counter = new Counter()
+
+
 if Meteor.isClient
+  Table.find().observe
+    added: -> counter.check()
+    changed: -> counter.check()
+
   table_view =
     status: -> if table() && table().busy then "besetzt" else "frei"
     is_free: -> table() && !table().busy
@@ -10,7 +15,6 @@ if Meteor.isClient
     events:
       'click input': =>
         Table.update(table()._id, busy: !table().busy, since: Date.now())
-        counter.update(table().busy)
 
   $.extend(Template.table, table_view)
 

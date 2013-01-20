@@ -1,16 +1,21 @@
 class Counter
+  check: ->
+    console.info 'checking', @table()
+    if @table() and @table().busy
+      @start()
+
   start: ->
     @end = @table().since + (0.1 * 60 * 1000)
     @id = Meteor.setInterval(@calculate, 1000)
     @calculate()
 
    calculate: =>
-     console.log 'calculate', @value()
+     console.info 'calculate', @value()
      Session.set('counter', @value() || "NaN")
      @stop() if @value() <= 0
 
    update: (busy) ->
-     console.log 'update', busy
+     console.info 'update', busy
      if busy then @start() else @stop()
 
    value: ->
