@@ -3,12 +3,13 @@
 </head>
 
 <body>
+  {{> counter}}
   {{> table}}
-  {{> players}}
 </body>
 
-<template name="players">
-
+<template name="counter">
+  <h1>Counter</h1>
+  <div>{{value}}</div>
 </template>
 
 <template name="table">
@@ -22,5 +23,7 @@
     <input type="button" value="Freigeben"></input>
     {{/if}}
   </p>
-  <div class="kasten {{status}}"></div>
+  <div class="kasten {{status}}">
+    {{countdown}}
+  </div>
 </template>
