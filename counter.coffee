@@ -1,6 +1,7 @@
+
 class Counter
   check: ->
-    console.info 'checking', @table()
+    log 'checking', @table()
     if @table() and @table().busy
       @start()
 
@@ -10,12 +11,12 @@ class Counter
     @calculate()
 
    calculate: =>
-     console.info 'calculate', @value()
+     log 'calculate', @value()
      Session.set('counter', @value() || "NaN")
      @stop() if @value() <= 0
 
    update: (busy) ->
-     console.info 'update', busy
+     log 'update', busy
      if busy then @start() else @stop()
 
    value: ->
