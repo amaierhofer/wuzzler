@@ -23,7 +23,6 @@ class Counter
      Math.round((@end - @time()) / 1000)
 
    stop: ->
-     Table.update(table()._id, busy: false)
      Session.set('counter', null)
      console.log('clearing interval: ', @id)
      Meteor.clearInterval(@id)
