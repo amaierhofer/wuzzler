@@ -5,35 +5,35 @@ table = ->
 
 class Counter
   constructor: ->
-    @end = Date.now() + (0.1 * 60 * 1000)
+    @end = table().since + (0.1 * 60 * 1000)
     @start()
 
   start: ->
     @id = Meteor.setInterval(@update, 1000)
-    console.log('started: ', @id)
-    Session.set('counter', @value())
+    @update()
 
    update: =>
-     console.log('updating: ', @value())
      Session.set('counter', @value())
-
-     @stop() if (@end - @time() < 0)
+     @stop() if @value() <= 0
 
    value: ->
-     Math.round((@end - @time()) / 1000)
+     Math.round((@end - parseInt(new Date().getTime(),10)) / 1000)
 
    stop: ->
      Session.set('counter', null)
-     console.log('clearing interval: ', @id)
      Meteor.clearInterval(@id)
+     # Table.update(table()._id, busy: false)
 
-   time: ->
-     parseInt(new Date().getTime(),10)
+
+     
 
 if Meteor.isClient
   Session.set('counter', null)
   Table.find().observe
-    added: (obj, idx) -> Session.set('table', obj._id)
+    added: (obj, idx) ->
+      Session.set('table', obj._id)
+      new Counter() if obj.busy
+
 
   table_view =
     status: -> if !Template.table.is_free() then "besetzt" else "frei"
@@ -48,7 +48,7 @@ if Meteor.isClient
         else
           @counter && @counter.stop()
 
-        Table.update(table()._id, busy: !table().busy)
+        Table.update(table()._id, busy: !table().busy, since: Date.now())
 
   $.extend(Template.table, table_view)
 
