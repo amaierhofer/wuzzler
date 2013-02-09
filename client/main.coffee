@@ -5,6 +5,7 @@ changeState = (table) ->
 
 status_view =
   status: -> if Session.get('busy') then 'busy' else 'free'
+  counter: -> if Session.get('busy') then Session.get('counter')
 
 actions_view =
   busy: -> Session.get('busy')

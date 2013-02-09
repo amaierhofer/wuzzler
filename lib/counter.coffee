@@ -10,7 +10,6 @@ counter = do ->
       intervalId = setInterval(counter.update, 1000)
 
   update: ->
-    log get()
     if get() > 0 then set(get() - 1) else counter.stop()
 
   stop: ->
