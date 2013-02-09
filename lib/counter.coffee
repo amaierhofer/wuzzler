@@ -5,7 +5,7 @@ counter = do ->
 
   start: ->
     if intervalId is 0
-      set(2)
+      set(10)
       counter.update()
       intervalId = setInterval(counter.update, 1000)
 
