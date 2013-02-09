@@ -12,12 +12,20 @@
 
 <template name="actions">
 <h3>When to play?</h3>
-{{#if busy}}
-<button class="btn" disabled>Now</button>
+{{#if currentUser}}
+  {{#if busy}}
+    {{#if releasable}}
+    <button class="btn">Release</button>
+    {{else}}
+    <button class="btn" disabled>Now</button>
+    {{/if}}
+  {{else}}
+  <button class="btn">Now</button>
+  {{/if}}
+  <button class="btn">Later</button>
 {{else}}
-<button class="btn">Now</button>
+<p>You must sign in to make a booking</p>
 {{/if}}
-<button class="btn">Later</button>
 </template>
 
 <template name="status">

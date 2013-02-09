@@ -10,8 +10,16 @@ status_view =
   username: -> table().user || "anonymous"
 
 actions_view =
+  releasable: -> table() && table().user is Meteor.user().username
   busy: -> Session.get('busy')
   events:
+
+    'click button:contains("Release")': =>
+      data =
+        busy: false
+        since: Date.now()
+      Table.update(table_id(), data)
+
     'click button:contains("Now")': =>
       data =
         busy: true
