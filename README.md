@@ -18,5 +18,9 @@ Sollen nicht mehr über jabber suchen müssen sondern auf der Seite interesse re
 * notify 
 
 
+## Lessons learned
+* $> meteor remove autopublish 
+
+
 # Resources
 *  http://www.narvenblog.com/2012/11/05/meteor-resourcers/

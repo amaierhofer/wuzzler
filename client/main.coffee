@@ -1,14 +1,27 @@
-Session.set('counter',5)
-Table.find().observe
-  added: -> counter.check()
-  changed: -> counter.check()
+changeState = (table) ->
+  Session.set('busy', table.busy)
+  if table.busy then counter.start() else counter.stop()
 
-table_view =
-  status: -> if table() && table().busy then "besetzt" else "frei"
-  is_free: -> table() && !table().busy
-  countdown: ->  Session.get('counter') || ""
+
+status_view =
+  status: -> if Session.get('busy') then 'busy' else 'free'
+
+actions_view =
+  busy: -> Session.get('busy')
   events:
-    'click input': =>
-      Table.update(table()._id, busy: !table().busy, since: Date.now())
+    'click button:contains("Now")': =>
+      Table.update(table_id(), busy: true, since: Date.now())
 
-$.extend(Template.table, table_view)
+$.extend(Template.status, status_view)
+$.extend(Template.actions, actions_view)
+
+
+Table.find({}).observe
+  added: (table) -> changeState(table)
+  changed: (table)-> changeState(table)
+
+
+
+
+
+

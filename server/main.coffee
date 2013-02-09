@@ -1,3 +1,5 @@
 Meteor.startup ->
-  if Table.find().count() is 0
-    Table.insert(busy: false)
+  console.log "started: #{new Date()}"
+  Table.remove({})
+  Table.insert({busy: false, since: Date.now()})
+

@@ -1,6 +1,7 @@
 Table = new Meteor.Collection("table")
+
 table = -> Table.findOne()
-counter = new Counter()
+table_id = -> Table.findOne()._id
 
 log = ->
   console.info(arguments...) if console

@@ -1,0 +1,26 @@
+<head>
+  <title>wuzzler</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+</head>
+
+<body>
+  {{> actions}}
+  {{> status}}  
+</body>
+
+<template name="actions">
+<h3>When to play?</h3>
+{{#if busy}}
+<button class="btn" disabled>Now</button>
+{{else}}
+<button class="btn">Now</button>
+{{/if}}
+<button class="btn">Later</button>
+</template>
+
+<template name="status">
+<h3>Status</h3>
+<div class="kasten {{status}}"></div>
+</template>
+

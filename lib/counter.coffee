@@ -1,29 +1,20 @@
-
-class Counter
-  check: ->
-    log 'checking', @table()
-    if @table() and @table().busy
-      @start()
+counter = do ->
+  intervalId = 0
+  set = (val) -> Session.set('counter', val)
+  get = -> Session.get('counter')
 
   start: ->
-    @end = @table().since + (0.1 * 60 * 1000)
-    @id = Meteor.setInterval(@calculate, 1000)
-    @calculate()
+    if intervalId is 0
+      set(2)
+      counter.update()
+      intervalId = setInterval(counter.update, 1000)
 
-   calculate: =>
-     log 'calculate', @value()
-     Session.set('counter', @value() || "NaN")
-     @stop() if @value() <= 0
+  update: ->
+    log get()
+    if get() > 0 then set(get() - 1) else counter.stop()
 
-   update: (busy) ->
-     log 'update', busy
-     if busy then @start() else @stop()
-
-   value: ->
-     Math.round((@end - parseInt(new Date().getTime(),10)) / 1000)
-
-   stop: ->
-     Session.set('counter', null)
-     Meteor.clearInterval(@id)
-
-   table: -> window.table()
+  stop: ->
+    if intervalId isnt 0
+      clearInterval(intervalId)
+      intervalId = 0
+      Table.update(table_id(), busy: false)
