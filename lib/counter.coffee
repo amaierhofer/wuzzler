@@ -25,6 +25,5 @@ class Counter
    stop: ->
      Session.set('counter', null)
      Meteor.clearInterval(@id)
-     Table.update(table()._id, busy: false)
 
    table: -> window.table()
