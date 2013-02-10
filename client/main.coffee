@@ -2,22 +2,27 @@ changeState = (table) ->
   Session.set('busy', table.busy)
   if table.busy then counter.start() else counter.stop()
 
+add_view_logic = do ->
+  Session.set('selected', [])
+
+  usernames: -> user.username for user in Meteor.users.find({}).fetch()
+  isValid: (name) ->
+    Meteor.users.findOne({username: name}) and
+    name isnt Meteor.user().username and not
+    _.contains(Session.get('selected'), name)
+
+  add: (name) ->
+    if add_view_logic.isValid(name)
+      selected = Session.get('selected')
+      selected.push(name)
+      Session.set('selected', selected)
+
 
 add_view =
-  names: ->
-    names = (user.username for user in Meteor.users.find({}).fetch())
-    JSON.stringify(name for name in names when name isnt Meteor.user().username)
-
-  added: ->
-    Session.get('added')
-
+  names: -> JSON.stringify(add_view_logic.usernames())
+  added: -> Session.get('selected')
   events:
-    'change #add': (e) ->
-      name = $(e.target).val()
-      log "sending notification to #{Meteor.users.findOne({username: name})}"
-      added = Session.get('added') || []
-      added.push(name)
-      Session.set('added',added)
+    'change #add': (e) -> add_view_logic.add($(e.target).val())
 
 status_view =
   busy: -> Session.get('busy')
