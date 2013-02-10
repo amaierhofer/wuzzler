@@ -8,7 +8,7 @@ preserve-inputs
 coffeescript
 less
 jquery
-autopublish
 bootstrap
 accounts-password
 accounts-ui
+autopublish

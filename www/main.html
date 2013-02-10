@@ -6,26 +6,32 @@
 
 <body>
   {{loginButtons align="right"}}
-  {{> actions}}
-  {{> status}}  
+  {{#if currentUser}}
+    {{> actions}}
+    {{> status}}  
+    {{> addPlayer}}
+  {{else}}
+  <h1>Not signed in!</h1>
+  {{/if}}
 </body>
+
+<template name="addPlayer">
+
+</template>
+
 
 <template name="actions">
 <h3>When to play?</h3>
-{{#if currentUser}}
-  {{#if busy}}
-    {{#if releasable}}
-    <button class="btn">Release</button>
-    {{else}}
-    <button class="btn" disabled>Now</button>
-    {{/if}}
+{{#if busy}}
+  {{#if releasable}}
+  <button class="btn">Release</button>
   {{else}}
-  <button class="btn">Now</button>
+  <button class="btn" disabled>Now</button>
   {{/if}}
-  <button class="btn">Later</button>
 {{else}}
-<p>You must sign in to make a booking</p>
+<button class="btn">Now</button>
 {{/if}}
+<button class="btn">Team</button>
 </template>
 
 <template name="status">
