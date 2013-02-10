@@ -9,14 +9,20 @@
   {{#if currentUser}}
     {{> actions}}
     {{> status}}  
-    {{> addPlayer}}
+    {{> add}}
   {{else}}
   <h1>Not signed in!</h1>
   {{/if}}
 </body>
 
-<template name="addPlayer">
-
+<template name="add">
+<h3>Add a player</h3>
+<input id="add" type="text" data-provide="typeahead" data-source="{{names}}"></input>
+<ul>
+  {{#each added}}
+  <li>{{this}}</li>
+  {{/each}}
+</ul>
 </template>
 
 

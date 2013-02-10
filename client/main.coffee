@@ -3,6 +3,22 @@ changeState = (table) ->
   if table.busy then counter.start() else counter.stop()
 
 
+add_view =
+  names: ->
+    names = (user.username for user in Meteor.users.find({}).fetch())
+    JSON.stringify(name for name in names when name isnt Meteor.user().username)
+
+  added: ->
+    Session.get('added')
+
+  events:
+    'change #add': (e) ->
+      name = $(e.target).val()
+      log "sending notification to #{Meteor.users.findOne({username: name})}"
+      added = Session.get('added') || []
+      added.push(name)
+      Session.set('added',added)
+
 status_view =
   busy: -> Session.get('busy')
   status: -> if Session.get('busy') then 'busy' else 'free'
@@ -13,7 +29,6 @@ actions_view =
   releasable: -> table() && table().user is Meteor.user().username
   busy: -> Session.get('busy')
   events:
-
     'click button:contains("Release")': =>
       data =
         busy: false
@@ -30,6 +45,7 @@ actions_view =
 
 $.extend(Template.status, status_view)
 $.extend(Template.actions, actions_view)
+$.extend(Template.add, add_view)
 
 Table.find({}).observe
   added: (table) -> changeState(table)
